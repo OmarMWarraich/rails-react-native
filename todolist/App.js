@@ -43,7 +43,7 @@ const App = () => {
           )
           :
           (
-            <>
+            <Stack.Group screenOptions={{ headerShown: false }}>
               <Stack.Screen
                 name="Login"
                 component={Login}
@@ -54,7 +54,7 @@ const App = () => {
                 component={Registration}
                 options={{ title: 'Registration' }}
               />
-            </>
+            </Stack.Group>
           )
         }
       </Stack.Navigator>
