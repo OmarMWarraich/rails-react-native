@@ -1,20 +1,65 @@
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-export default function App() {
+import Login from './screens/Login';
+import Registration from './screens/Registration';
+import TodoList from './screens/TodoList';
+
+const Stack = createNativeStackNavigator();
+
+const App = () => {
+  const [loggedInStatus, setLoggedInStatus] = useState('NOT_LOGGED_IN');
+
+  const checkLoginStatus = () => {
+    axios.get('http://localhost:3000/logged_in', { withCredentials: true })
+      .then(response => {
+        if (response.data.logged_in && loggedInStatus === 'NOT_LOGGED_IN') {
+          setLoggedInStatus('LOGGED_IN');
+        } else if (!response.data.logged_in && loggedInStatus === 'LOGGED_IN') {
+          setLoggedInStatus('NOT_LOGGED_IN');
+        }
+      })
+      .catch(error => console.log('api errors:', error));
+  };
+
+  useEffect(() => {
+    checkLoginStatus();
+  }, []);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        {
+          loggedInStatus === 'LOGGED_IN' ?
+          (
+            <Stack.Screen
+              name="TodoList"
+              component={TodoList}
+              options={{ title: 'TodoList' }}
+            />
+          )
+          :
+          (
+            <>
+              <Stack.Screen
+                name="Login"
+                component={Login}
+                options={{ title: 'Login' }}
+              />
+              <Stack.Screen
+                name="Registration"
+                component={Registration}
+                options={{ title: 'Registration' }}
+              />
+            </>
+          )
+        }
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
