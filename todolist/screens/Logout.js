@@ -1,6 +1,6 @@
 import axios from "axios"
 import React from "react"
-import { Button, View } from "react-native"
+import { Button, View, StyleSheet } from "react-native"
 import { useNavigation } from "@react-navigation/native"
 
 const Logout = () => {
@@ -19,7 +19,7 @@ const Logout = () => {
     }
     
     return (
-        <View>
+        <View style={styles.input}>
           <Button title="Logout" onPress={handleLogout} />
         </View>
     )
@@ -27,4 +27,8 @@ const Logout = () => {
 
 export default Logout
 
-
+const styles = StyleSheet.create({
+    input: {
+        width: "100px",      
+    },
+})
